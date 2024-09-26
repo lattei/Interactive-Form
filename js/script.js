@@ -62,32 +62,46 @@ registerForm.addEventListener('change', (e) => {
 });
 
 /* Payment Info
+Stored paymentOptions into a dictionary, keeping it hidden until choice was made
 */
+
+// console.log(selectPayment);
+// const creditCard = document.querySelector('#credit-card');
+// console.log(creditCard.getAttribute('id'));
+// const payPal = document.querySelector('#paypal');
+// const bitCoin = document.querySelector('#bitcoin');
 const selectPayment = document.querySelector('select[id="payment"]');
-console.log(selectPayment);
-const creditCard = document.querySelector('#credit-card');
-console.log(creditCard.getAttribute('id'));
-const payPal = document.querySelector('#paypal');
-const bitCoin = document.querySelector('#bitcoin');
-console.log(payPal);
-console.log(bitCoin);
+function showPaymentOptions(paymentChoice) {
+    const paymentOption = {
+    "credit-card": document.querySelector('#credit-card'),
+    "paypal": document.querySelector('#paypal'),
+    "bitcoin": document.querySelector('#bitcoin')
+};
+    for (let option in paymentOption) {
+        paymentOption[option].hidden = true;
+    }
+
+    if (paymentOption[paymentChoice]) {
+        paymentOption[paymentChoice].hidden = false;
+    }
+};
 
 selectPayment.addEventListener('change', (e) => {
     const choice = e.target.value;
     console.log(choice);
-    if (choice === creditCard.getAttribute('id')) {
-        creditCard.hidden = false;
-        payPal.hidden = true;
-        bitCoin.hidden = true;
-        console.log("credit card chosen");
-    } else if (choice === payPal.getAttribute('id')) {
-        payPal.hidden = false;
-        creditCard.hidden = true;
-        bitCoin.hidden = true;
-    } else if (choice === bitCoin.getAttribute('id')) {
-        bitCoin.hidden = false;
-        creditCard.hidden = true;
-        payPal.hidden = true;
-    }
-
-})
+    showPaymentOptions(choice);
+    // if (choice === creditCard.getAttribute('id')) {
+    //     creditCard.hidden = false;
+    //     payPal.hidden = true;
+    //     bitCoin.hidden = true;
+    //     console.log("credit card chosen");
+    // } else if (choice === payPal.getAttribute('id')) {
+    //     payPal.hidden = false;
+    //     creditCard.hidden = true;
+    //     bitCoin.hidden = true;
+    // } else if (choice === bitCoin.getAttribute('id')) {
+    //     bitCoin.hidden = false;
+    //     creditCard.hidden = true;
+    //     payPal.hidden = true;
+    // }
+});
