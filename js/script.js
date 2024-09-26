@@ -44,22 +44,50 @@ shirtDesign.addEventListener('change', (e) => {
     }; 
 });
 
-// Register for Activities
+/* Registering for activities
+Declared variables to target the form, and the activities cost per event
+Created event listener to add to total cost when checked.
+
+*/
 const registerForm = document.querySelector('#activities');
 const total = document.querySelector('p[id="activities-cost"]');
 let totalCost = 0;
-console.log(totalCost);
 
 registerForm.addEventListener('change', (e) => {
 
-    const choice = e.target
+    const choice = e.target;
     const cost = parseInt(choice.dataset.cost);
-    // if (choice.checked) {
-    //     totalCost += cost;
-    // } else {
-    //     totalCost -=cost;
-    // }
     choice.checked ? totalCost += cost : totalCost -= cost;
-    console.log(totalCost);
     total.innerHTML = `Total: $${totalCost}`;
 });
+
+/* Payment Info
+*/
+const selectPayment = document.querySelector('select[id="payment"]');
+console.log(selectPayment);
+const creditCard = document.querySelector('#credit-card');
+console.log(creditCard.getAttribute('id'));
+const payPal = document.querySelector('#paypal');
+const bitCoin = document.querySelector('#bitcoin');
+console.log(payPal);
+console.log(bitCoin);
+
+selectPayment.addEventListener('change', (e) => {
+    const choice = e.target.value;
+    console.log(choice);
+    if (choice === creditCard.getAttribute('id')) {
+        creditCard.hidden = false;
+        payPal.hidden = true;
+        bitCoin.hidden = true;
+        console.log("credit card chosen");
+    } else if (choice === payPal.getAttribute('id')) {
+        payPal.hidden = false;
+        creditCard.hidden = true;
+        bitCoin.hidden = true;
+    } else if (choice === bitCoin.getAttribute('id')) {
+        bitCoin.hidden = false;
+        creditCard.hidden = true;
+        payPal.hidden = true;
+    }
+
+})
