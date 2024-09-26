@@ -6,8 +6,6 @@ nameInput.focus();
 // Selecting Job Role's 'Other', hidden by default, but if selected, text field
 const jobRole = document.querySelector('select[name="user-title"]');
 const otherJob = document.querySelector('#other-job-role');
-// console.log(jobRole);
-// console.log(otherJob);
 otherJob.style.display = 'none';
 
 //Event listener, checks if Other was selected and to show the text if so.
@@ -51,6 +49,8 @@ Created event listener to add to total cost when checked.
 */
 const registerForm = document.querySelector('#activities');
 const total = document.querySelector('p[id="activities-cost"]');
+const activityBoxes = registerForm.querySelectorAll('input[type="checkbox"]');
+console.log(activityBoxes);
 let totalCost = 0;
 
 registerForm.addEventListener('change', (e) => {
@@ -61,11 +61,21 @@ registerForm.addEventListener('change', (e) => {
     total.innerHTML = `Total: $${totalCost}`;
 });
 
+/* Activities Section
+Accessbility */
+activityBoxes.forEach(box => {
+    box.addEventListener('focus', () => box.parentElement.classList.add('focus'));
+    box.addEventListener('blur', () => box.parentElement.classList.remove('focus'));
+});
+
 /* Payment Info
 Stored paymentOptions into a dictionary, keeping it hidden until choice was made
+Created variables to see which payment method user chooses for submission event handling
 */
 
 const selectPayment = document.querySelector('select[id="payment"]');
+let paidCredit = false;
+let paidOther = false;
 function showPaymentOptions(paymentChoice) {
     const paymentOption = {
     "credit-card": document.querySelector('#credit-card'),
@@ -84,4 +94,95 @@ function showPaymentOptions(paymentChoice) {
 selectPayment.addEventListener('change', (e) => {
     const choice = e.target.value;
     showPaymentOptions(choice);
+    if (choice === 'credit-card') {
+        paidCredit = true;
+        console.log("they're using the card, sir");
+    } else if (choice === 'paypal' || choice === 'bitcoin') {
+        paidOther = true;
+    }
+    
 });
+
+/* Form Validation */
+const validateDoc = document.querySelector('form');
+const emailInput = document.querySelector('#email');
+// const ccCredentials = 
+const zipCode = document.querySelector('#zip')
+const ccNum = document.querySelector('#cc-num');
+const ccCode = document.querySelector('#cvv');
+/* Creating Validators for the Criteria needed
+*/
+const isValidName = () => {
+    // nameInput.value.trim().length === 0 ? e.preventDefault() : nameInput.value;
+    if (nameInput.value.trim().length !== 0) {
+        return nameInput.value;
+    }
+
+}
+const isValidEmail = () => /^[^@]+@[^@.]+\.[a-z]+$/i.test(emailInput.value);
+const isZipCode = () => /^\d{5}$/.test(zipCode.value);
+const isNum = () => /^\d{13,16}$/.test(ccNum.value.trim());
+const isCvv = () => /^\d{3}$/.test(cvv.value);
+function isValidCredit(){
+    if (paidCredit && isZipCode() && isNum() && isCvv()) {
+        ccNum.parentElement.classList.add('valid');
+        zipCode.parentElement.classList.add('valid');
+        cvv.parentElement.classList.add('valid');
+        return true;
+    } else {
+        console.log('uh oh..');
+    }
+    
+}
+
+
+
+
+validateDoc.addEventListener('submit', (e) => {
+    const validation = (inputElement, fn) => {
+        if (fn()) {
+            inputElement.className = "valid";
+            inputElement.classList.remove("not-valid");
+            inputElement.lastElementChild.style.display = "none";
+            console.log("it's working!");
+        } else {
+            e.preventDefault();
+            inputElement.className = "not-valid";
+            inputElement.lastElementChild.style.display = "block";
+            console.log('this working??');
+        }
+    };
+    validation(nameInput.parentElement, isValidName);
+    validation(emailInput.parentElement, isValidEmail);
+
+    if (nameInput.value.trim().length === 0) {
+        e.preventDefault();
+        console.log("i wanna know your naaame");
+        // nameInput.parentElement.classList.remove('valid');
+        // nameInput.parentElement.classList.add('not-valid');
+        // document.querySelector('span[id="name-hint"]').style.display = 'block';
+    } else if (!isValidEmail()) {
+        e.preventDefault();
+        // nameInput.parentElement.classList.remove('not-valid');
+        // nameInput.parentElement.classList.add('valid');
+        console.log(`it's the email this time tsk tsk`);
+        
+        // document.querySelector('span[id="name-hint"]').style.display = 'none';
+        // document.getElementById("activities-hint").style.display = 'block';
+    } if (totalCost === 0) {
+        e.preventDefault();
+        // emailInput.parentElement.classList.remove('valid');
+        // emailInput.parentElement.classList.add('not-valid');
+        console.log('choose an event!!');
+        // document.querySelector('span[id="email-hint"]').style.display = 'block';
+        // document.querySelector('span[id="name-hint"]').style.display = 'none';
+    } else if (isValidCredit() || paidOther) {
+        e.preventDefault();
+        console.log('ooo you got adult money huh?');
+    } else {
+        e.preventDefault();
+        console.log('wait a min..');
+    }
+
+});
+
