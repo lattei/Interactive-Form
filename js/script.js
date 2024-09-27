@@ -139,50 +139,39 @@ function isValidCredit(){
 
 
 validateDoc.addEventListener('submit', (e) => {
+    if (totalCost === 0) {
+        e.preventDefault();
+        console.log('choose an event!!');
+        document.querySelector('[id="activities-hint"]').style.display = 'block';
+
+    } else {
+
+    }
     const validation = (inputElement, fn) => {
         if (fn()) {
             inputElement.className = "valid";
             inputElement.classList.remove("not-valid");
             inputElement.lastElementChild.style.display = "none";
-            console.log("it's working!");
+            
         } else {
             e.preventDefault();
             inputElement.className = "not-valid";
             inputElement.lastElementChild.style.display = "block";
-            console.log('this working??');
         }
     };
     validation(nameInput.parentElement, isValidName);
     validation(emailInput.parentElement, isValidEmail);
+    validation(zipCode.parentElement, isZipCode);
+    validation(ccNum.parentElement, isNum);
+    validation(cvv.parentElement, isCvv);
 
-    if (nameInput.value.trim().length === 0) {
-        e.preventDefault();
-        console.log("i wanna know your naaame");
-        // nameInput.parentElement.classList.remove('valid');
-        // nameInput.parentElement.classList.add('not-valid');
-        // document.querySelector('span[id="name-hint"]').style.display = 'block';
-    } else if (!isValidEmail()) {
-        e.preventDefault();
-        // nameInput.parentElement.classList.remove('not-valid');
-        // nameInput.parentElement.classList.add('valid');
-        console.log(`it's the email this time tsk tsk`);
-        
-        // document.querySelector('span[id="name-hint"]').style.display = 'none';
-        // document.getElementById("activities-hint").style.display = 'block';
-    } if (totalCost === 0) {
-        e.preventDefault();
-        // emailInput.parentElement.classList.remove('valid');
-        // emailInput.parentElement.classList.add('not-valid');
-        console.log('choose an event!!');
-        // document.querySelector('span[id="email-hint"]').style.display = 'block';
-        // document.querySelector('span[id="name-hint"]').style.display = 'none';
-    } else if (isValidCredit() || paidOther) {
-        e.preventDefault();
-        console.log('ooo you got adult money huh?');
-    } else {
-        e.preventDefault();
-        console.log('wait a min..');
-    }
+    //  else if (isValidCredit() || paidOther) {
+    //     e.preventDefault();
+    //     console.log('ooo you got adult money huh?');
+    // } else {
+    //     e.preventDefault();
+    //     console.log('wait a min..');
+    // }
 
 });
 
