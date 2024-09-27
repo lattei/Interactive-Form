@@ -32,14 +32,13 @@ const isValidName = () => {
         return nameInput.value;
     }
 };
-const isValidEmail = () => /^[^@]+@[^@.]+\.[a-z]+$/i.test(emailInput.value);
+const isValidEmail = () => /^[^@]+@[^@.]+\.[A-za-z]+$/i.test(emailInput.value);
 const isActivity = () => {
     return totalCost > 0;
 };
 const isZipCode = () => /^\d{5}$/.test(zipCode.value);
 const isNum = () => /^\d{13,16}$/.test(ccNum.value.trim());
 const isCvv = () => /^\d{3}$/.test(cvv.value);
-
 //Event listeners for Job Role, Shirt Design, and Activities
 
 jobRole.addEventListener('change', (e) => {
@@ -132,17 +131,26 @@ validateDoc.addEventListener('submit', (e) => {
             inputElement.className = "not-valid";
             inputElement.lastElementChild.style.display = "block";
         }
-    };
+    }
     validation(nameInput.parentElement, isValidName);
     validation(emailInput.parentElement, isValidEmail);
     validation(registerForm, isActivity);
+    //Conditional messaging for payment method
     if (paidCredit) {
         validation(zipCode.parentElement, isZipCode);
         validation(ccNum.parentElement, isNum);
         validation(cvv.parentElement, isCvv);
     } else if (!paidOther) {
         e.preventDefault();
-        console.log('Select a payment method!')
+        alert('Select a payment method!');
+    }
+    //Conditional messaging for email
+    if (!emailInput.value) {
+        emailInput.parentElement.lastElementChild.textContent = "Please provide an email address";
+    
+    } else {
+        emailInput.parentElement.lastElementChild.textContent = "Please check your email address formatting."
     }
 });
+/* Exceeds Expectations - Real Time Validator */
 
