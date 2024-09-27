@@ -121,13 +121,13 @@ selectPayment.addEventListener('change', (e) => {
 
 function validation(inputElement, fn, e) {
     if (fn()) {
-        inputElement.className = "valid";
+        inputElement.classListt.add("valid");
         inputElement.classList.remove("not-valid");
         inputElement.lastElementChild.style.display = "none";
         return true;
     } else {
         if (e) e.preventDefault();
-        inputElement.className = "not-valid";
+        inputElement.classList.add("not-valid");
         inputElement.lastElementChild.style.display = "block";
         return false;
     }
