@@ -18,7 +18,9 @@ const activityBoxes = registerForm.querySelectorAll('input[type="checkbox"]');
 let totalCost = 0;
 //Payment Info
 const selectPayment = document.querySelector('select[id="payment"]');
-let paidCredit = false;
+const paypal = document.querySelector('#paypal');
+const bitcoin = document.querySelector('#bitcoin');
+let paidCredit = true;
 let paidOther = false;
 /* Form Validation */
 const validateDoc = document.querySelector('form');
@@ -83,6 +85,12 @@ activityBoxes.forEach(box => {
 /* Payment Info
 Stored paymentOptions into a dictionary, keeping it hidden until choice was made
 Created variables to see which payment method user chooses for submission event handling */
+selectPayment.options[1].selected = true;
+if (selectPayment.options[1].selected = true) {
+    paypal.hidden = true;
+    bitcoin.hidden = true;
+}
+
 function showPaymentOptions(paymentChoice) {
     const paymentOption = {
     "credit-card": document.querySelector('#credit-card'),
@@ -101,56 +109,54 @@ function showPaymentOptions(paymentChoice) {
 selectPayment.addEventListener('change', (e) => {
     const choice = e.target.value;
     showPaymentOptions(choice);
-    if (choice === 'credit-card') {
-        paidCredit = true;
-        console.log("they're using the card, sir");
-    } else if (choice === 'paypal' || choice === 'bitcoin') {
+    if (choice === 'paypal' || choice === 'bitcoin') {
         paidOther = true;
+        paidCredit = false;
+    } else if (choice === 'credit-card') {
+        paidCredit = true;
     }
     
 });
 
-validateDoc.addEventListener('submit', (e) => {
-    // if (totalCost === 0) {
-    //     e.preventDefault();
-    //     registerForm.className = "not-valid";
-    //     document.getElementById('activities-hint').style.display = 'block';
-    // } else {
-    //     registerForm.className = "valid";
-    //     registerForm.classList.remove("not-valid");
-    //     document.getElementById('activities-hint').style.display = 'none';
-    // }
-    const validation = (inputElement, fn) => {
-        if (fn()) {
-            inputElement.className = "valid";
-            inputElement.classList.remove("not-valid");
-            inputElement.lastElementChild.style.display = "none";
-            
-        } else {
-            e.preventDefault();
-            inputElement.className = "not-valid";
-            inputElement.lastElementChild.style.display = "block";
-        }
+function validation(inputElement, fn, e) {
+    if (fn()) {
+        inputElement.className = "valid";
+        inputElement.classList.remove("not-valid");
+        inputElement.lastElementChild.style.display = "none";
+        return true;
+    } else {
+        if (e) e.preventDefault();
+        inputElement.className = "not-valid";
+        inputElement.lastElementChild.style.display = "block";
+        return false;
     }
-    validation(nameInput.parentElement, isValidName);
-    validation(emailInput.parentElement, isValidEmail);
-    validation(registerForm, isActivity);
+};
+
+validateDoc.addEventListener('submit', (e) => {
+    validation(nameInput.parentElement, isValidName, e);
+    validation(emailInput.parentElement, isValidEmail, e);
+    validation(registerForm, isActivity, e);
     //Conditional messaging for payment method
     if (paidCredit) {
-        validation(zipCode.parentElement, isZipCode);
-        validation(ccNum.parentElement, isNum);
-        validation(cvv.parentElement, isCvv);
-    } else if (!paidOther) {
-        e.preventDefault();
-        alert('Select a payment method!');
+        validation(zipCode.parentElement, isZipCode, e);
+        validation(ccNum.parentElement, isNum, e);
+        validation(cvv.parentElement, isCvv, e);
     }
     //Conditional messaging for email
     if (!emailInput.value) {
         emailInput.parentElement.lastElementChild.textContent = "Please provide an email address";
-    
     } else {
         emailInput.parentElement.lastElementChild.textContent = "Please check your email address formatting."
     }
+    
 });
+
 /* Exceeds Expectations - Real Time Validator */
+ccNum.addEventListener('keyup', () => {
+    validation(ccNum.parentElement, isNum);
+});
+
+nameInput.addEventListener('keyup', () => {
+    validation(nameInput.parentElement, isValidName);
+})
 
