@@ -73,6 +73,7 @@ registerForm.addEventListener('change', (e) => {
     const cost = parseInt(choice.dataset.cost);
     choice.checked ? totalCost += cost : totalCost -= cost;
     total.innerHTML = `Total: $${totalCost}`;
+
 });
 
 /* Activities Section
@@ -136,6 +137,13 @@ validateDoc.addEventListener('submit', (e) => {
     validation(nameInput.parentElement, isValidName, e);
     validation(emailInput.parentElement, isValidEmail, e);
     validation(registerForm, isActivity, e);
+    /* Just in case the activityForm doesn't need to have valid + not-valid classNames */
+    // if (totalCost === 0) {
+    //     registerForm.lastElementChild.style.display = "block";
+    // } else {
+    //     registerForm.lastElementChild.style.display = "none";
+    // }
+    
     //Conditional messaging for payment method
     if (paidCredit) {
         validation(zipCode.parentElement, isZipCode, e);
@@ -160,3 +168,19 @@ nameInput.addEventListener('keyup', () => {
     validation(nameInput.parentElement, isValidName);
 })
 
+/* Exceeds Expectations - Conflicting Events */
+
+function ConflictingChecks(e) {
+    const selectedCheck = e.target;
+    const selectedTime = selectedCheck.getAttribute('data-day-and-time');
+    const allCheckboxes = document.querySelectorAll('input[type="checkbox"]'); 
+
+    allCheckboxes.forEach(check => {
+        if (check !== selectedCheck && check.getAttribute('data-day-and-time') === selectedTime) {
+            check.disabled = selectedCheck.checked;
+        }
+    });
+}
+activityBoxes.forEach(check => {
+    check.addEventListener('change', ConflictingChecks)
+});
