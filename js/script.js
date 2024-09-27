@@ -9,7 +9,7 @@ otherJob.style.display = 'none';
 const shirtColor = document.querySelector('select[id=color]');
 const shirtDesign = document.querySelector('select[name=user-design]');
 const options = shirtColor.children;
-shirtColor.style.display = 'none';
+shirtColor.disabled = true;
 //Registering for activities
 //Declared variables to target the form, and the activities cost per event
 const registerForm = document.querySelector('#activities');
@@ -54,7 +54,7 @@ jobRole.addEventListener('change', (e) => {
 });
 
 shirtDesign.addEventListener('change', (e) => {
-    shirtColor.style.display = 'block';
+    shirtColor.disabled = false;
     const selectedOption = e.target.value;
     for (let i = 0; i < options.length; i++) {
         options[0].selected = true;
@@ -143,7 +143,7 @@ validateDoc.addEventListener('submit', (e) => {
     // } else {
     //     registerForm.lastElementChild.style.display = "none";
     // }
-    
+
     //Conditional messaging for payment method
     if (paidCredit) {
         validation(zipCode.parentElement, isZipCode, e);
