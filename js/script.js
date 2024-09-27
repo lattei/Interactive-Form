@@ -121,7 +121,7 @@ selectPayment.addEventListener('change', (e) => {
 
 function validation(inputElement, fn, e) {
     if (fn()) {
-        inputElement.classListt.add("valid");
+        inputElement.classList.add("valid");
         inputElement.classList.remove("not-valid");
         inputElement.lastElementChild.style.display = "none";
         return true;
